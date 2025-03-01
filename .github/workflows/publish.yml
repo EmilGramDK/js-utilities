@@ -24,6 +24,11 @@ jobs:
       - name: Build the package
         run: npm run build
 
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+
       - name: Bump version
         run: npm version patch -m "Bump version to %s"
         env:
