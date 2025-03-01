@@ -26,8 +26,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
+          git config --global user.email "hi@emilgram.dk"
+          git config --global user.name "EmilGramDK"
 
       - name: Bump version
         run: npm version patch -m "Bump version to %s"
