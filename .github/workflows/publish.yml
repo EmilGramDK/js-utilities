@@ -41,5 +41,3 @@ jobs:
 
       - name: Push version update
         run: git push --follow-tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
