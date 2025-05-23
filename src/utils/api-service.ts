@@ -2,14 +2,27 @@
  *
  *
  */
+
+type Fetcher = <T>(url: string, options?: RequestInit) => Promise<T>;
+
 export class AbortableAPIService {
+  protected fetcher: Fetcher;
+
   private abortControllers: Map<string, AbortController> = new Map();
 
+  constructor(customFetcher?: Fetcher) {
+    this.fetcher = customFetcher ?? this.defaultFetcher;
+  }
+
   /**
-   * Performs a fetch request with auto-managed abort controller.
-   * @param key Unique key for tracking/canceling the request.
-   * @param url Full URL to fetch.
-   * @param options Fetch options (method, headers, body, etc.)
+   * Allows you to override the fetch implementation.
+   */
+  public setFetcher(fetchImpl: Fetcher): void {
+    this.fetcher = fetchImpl;
+  }
+
+  /**
+   * Performs a request using the configured fetcher.
    */
   protected async fetch<T>(key: string, url: string, options: RequestInit = {}): Promise<T> {
     this.abortPreviousRequest(key);
@@ -18,24 +31,18 @@ export class AbortableAPIService {
     this.abortControllers.set(key, controller);
 
     try {
-      const response = await fetch(url, {
+      // Inject abort signal
+      const mergedOptions = {
         ...options,
         signal: controller.signal,
-      });
+      };
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      return (await response.json()) as T;
+      return await this.fetcher<T>(url, mergedOptions);
     } finally {
-      this.abortControllers.delete(key); // Clean up
+      this.abortControllers.delete(key);
     }
   }
 
-  /**
-   * Manually abort a request by key.
-   */
   protected abortRequest(key: string): void {
     const controller = this.abortControllers.get(key);
     if (controller) {
@@ -44,9 +51,6 @@ export class AbortableAPIService {
     }
   }
 
-  /**
-   * Abort all active requests.
-   */
   protected abortAll(): void {
     for (const controller of this.abortControllers.values()) {
       controller.abort();
@@ -54,14 +58,26 @@ export class AbortableAPIService {
     this.abortControllers.clear();
   }
 
-  /**
-   * Internal: abort previous request with the same key if it exists.
-   */
   private abortPreviousRequest(key: string): void {
     const existing = this.abortControllers.get(key);
     if (existing) {
       existing.abort();
       this.abortControllers.delete(key);
     }
+  }
+
+  /**
+   * Default fetcher using native fetch (returns JSON)
+   */
+  private async defaultFetcher<T>(url: string, options?: RequestInit): Promise<T> {
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    if (response.status === 204) return undefined as unknown as T;
+
+    return await response.json();
   }
 }
