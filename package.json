@@ -1,6 +1,6 @@
 {
   "name": "@emilgramdk/utils",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "scripts": {
     "build": "tsup",
     "lint": "eslint src --ext .ts",
