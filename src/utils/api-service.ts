@@ -1,15 +1,22 @@
-/**
- *
- *
- */
-
 type Fetcher = <T>(url: string, options?: RequestInit) => Promise<T>;
 
+/**
+ * AbortableAPIService is a base class for making API requests with built-in support for aborting requests.
+ * It allows you to perform requests with a custom fetch implementation and manage request cancellation.
+ * This is particularly useful in scenarios where you want to avoid unnecessary network requests, such as when a user navigates away from a page or component.
+ */
 export class AbortableAPIService {
   protected fetcher: Fetcher;
 
   private abortControllers: Map<string, AbortController> = new Map();
 
+  /**
+   * Creates an instance of AbortableAPIService.
+   * You can optionally provide a custom fetch implementation.
+   * If no custom fetcher is provided, it defaults to using the native fetch API.
+   *
+   * @param customFetcher - Optional custom fetch implementation.
+   */
   constructor(customFetcher?: Fetcher) {
     this.fetcher = customFetcher ?? this.defaultFetcher;
   }
