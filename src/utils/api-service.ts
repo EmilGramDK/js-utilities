@@ -45,6 +45,9 @@ export class AbortableAPIService {
       };
 
       return await this.fetcher<T>(url, mergedOptions);
+    } catch (error: any) {
+      if (error.name === 'AbortError') return;
+      throw error; // unexpected errors
     } finally {
       this.abortControllers.delete(key);
     }
