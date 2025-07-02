@@ -78,13 +78,22 @@ export class AbortableAPIService {
    */
   private async defaultFetcher<T>(url: string, options?: RequestInit): Promise<T> {
     const response = await fetch(url, options);
+    return this.handleResponse<T>(response);
+  }
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+  private async handleResponse<T>(res: Response): Promise<T> {
+    const contentType = res.headers.get("Content-Type") || "";
+
+    if (!res.ok) {
+      const errorBody = contentType.includes("application/json") ? await res.json() : await res.text();
+      throw new Error(typeof errorBody === "string" ? errorBody : errorBody.message || "Unknown error");
     }
 
-    if (response.status === 204) return undefined as unknown as T;
+    if (contentType.includes("application/json")) {
+      return res.json() as Promise<T>;
+    }
 
-    return await response.json();
+    // Handle other content types as needed
+    return res.text() as unknown as T;
   }
 }
