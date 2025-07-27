@@ -8,6 +8,8 @@
   "keywords": [
     "web",
     "utilities",
+    "eslint",
+    "prettier",
     "typescript",
     "solid-js"
   ],
@@ -42,6 +44,7 @@
   "files": [
     "src",
     "scripts",
+    ".vscode",
     "package.json",
     "eslint.config.ts",
     ".prettierrc.json"

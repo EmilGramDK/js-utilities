@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-import { writeFile, cp, access, readFile } from "fs/promises";
+import { writeFile, cp, access, readFile, mkdir, readdir, stat } from "fs/promises";
 import { constants } from "fs";
 import { execSync } from "child_process";
 import path from "path";
@@ -30,6 +30,7 @@ const configFiles = [
 const scripts = {
   lint: "eslint 'src/**/*.{ts,mts,tsx}' --fix",
   format: "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
+  check: "bun run format && bun run lint",
 };
 
 async function fileExists(filePath: string) {
@@ -85,11 +86,38 @@ async function updatePackageJsonScripts() {
   }
 }
 
+async function copyVSCodeFiles() {
+  const sourceDir = path.join(__dirname, "../.vscode");
+  const destDir = path.join(root, ".vscode");
+
+  try {
+    await mkdir(destDir, { recursive: true });
+    const files = await readdir(sourceDir);
+    for (const file of files) {
+      const src = path.join(sourceDir, file);
+      const dest = path.join(destDir, file);
+
+      if (!(await fileExists(dest))) {
+        const stats = await stat(src);
+        if (stats.isFile()) {
+          await cp(src, dest);
+          console.log(`✅ Copied .vscode/${file}`);
+        }
+      } else {
+        console.log(`⚠️  .vscode/${file} already exists. Skipped.`);
+      }
+    }
+  } catch (err) {
+    console.error("⚠️  Skipping .vscode config copy. Reason:", err.message);
+  }
+}
+
 (async () => {
   try {
     await installDeps();
     await copyConfigs();
     await updatePackageJsonScripts();
+    await copyVSCodeFiles();
     console.log("🎉 ESLint and Prettier setup complete!");
   } catch (error) {
     console.error("❌ Setup failed:", error);
