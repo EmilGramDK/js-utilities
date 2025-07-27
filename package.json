@@ -2,7 +2,7 @@
   "type": "module",
   "sideEffects": false,
   "name": "@emilgramdk/web",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Utilities for web development with TypeScript.",
   "packageManager": "bun@1.2.19",
   "keywords": [
