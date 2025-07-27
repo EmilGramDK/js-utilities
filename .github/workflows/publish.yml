@@ -24,9 +24,6 @@ jobs:
       - name: Lint Code
         run: bun run lint
 
-      - name: Build package
-        run: bun run build
-
       - name: Configure Git
         run: |
           git config --global user.email "hi@emilgram.dk"

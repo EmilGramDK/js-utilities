@@ -19,7 +19,6 @@
     "url": "https://github.com/EmilGramDK/web/issues"
   },
   "scripts": {
-    "build": "",
     "lint": "eslint --fix 'src/**/*.{ts,mts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'"
   },
