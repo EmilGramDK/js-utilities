@@ -56,7 +56,7 @@ export interface AuthConfig {
 
 export interface Tokens {
   accessToken: string;
-  refreshToken?: string | undefined;
+  refreshToken?: string;
 }
 
 export type AuthClient = AuthClientClass;

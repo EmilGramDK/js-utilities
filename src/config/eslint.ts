@@ -5,7 +5,6 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 import type { Config } from "@eslint/config-helpers";
 import unicorn from "eslint-plugin-unicorn";
 import sonarjs from "eslint-plugin-sonarjs";
-import perfectionist from "eslint-plugin-perfectionist";
 import solid from "eslint-plugin-solid";
 
 export const eslintConfig = {
@@ -17,7 +16,7 @@ export const eslintConfig = {
     sourceType: "module",
   },
 
-  plugins: { "@typescript-eslint": tseslint, unicorn, sonarjs, perfectionist, solid },
+  plugins: { "@typescript-eslint": tseslint, unicorn, sonarjs, solid },
 
   rules: {
     ...tseslint.configs.recommended.rules,

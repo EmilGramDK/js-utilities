@@ -13,7 +13,7 @@ export function replaceKeys<T>(object: T, replacements?: Replacements): T {
     return object.map((item) => replaceKeys(item, replacements)) as T;
   }
 
-  if (object !== null && typeof object === "object") {
+  if (object && typeof object === "object") {
     const newObject: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(object)) {
       const newKey = replacements[key] || key;
