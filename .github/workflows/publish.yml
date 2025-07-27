@@ -29,15 +29,15 @@ jobs:
           git config --global user.email "hi@emilgram.dk"
           git config --global user.name "EmilGramDK"
 
-      - name: Bump version
-        run: bun pm version patch --message "Bump version to %s"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Publish to npm
         run: bun publish
         env:
           NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Bump version
+        run: bun pm version patch --message "Bump version to %s"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push version update
         run: git push --follow-tags
