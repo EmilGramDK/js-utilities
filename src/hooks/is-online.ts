@@ -22,8 +22,8 @@ export class OnlineStatus {
   private subscribers: Set<OnlineStatusCallback> = new Set();
 
   private constructor() {
-    window.addEventListener("online", this.notifySubscribers);
-    window.addEventListener("offline", this.notifySubscribers);
+    globalThis.addEventListener("online", this.notifySubscribers);
+    globalThis.addEventListener("offline", this.notifySubscribers);
   }
 
   public static getInstance(): OnlineStatus {
@@ -55,8 +55,8 @@ export class OnlineStatus {
   };
 
   public destroy(): void {
-    window.removeEventListener("online", this.notifySubscribers);
-    window.removeEventListener("offline", this.notifySubscribers);
+    globalThis.removeEventListener("online", this.notifySubscribers);
+    globalThis.removeEventListener("offline", this.notifySubscribers);
     this.subscribers.clear();
   }
 }

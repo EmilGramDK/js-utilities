@@ -1,37 +1,67 @@
 {
-  "name": "@emilgramdk/utils",
-  "version": "1.0.18",
-  "scripts": {
-    "build": "tsup",
-    "lint": "eslint src --ext .ts",
-    "prepublishOnly": "npm run build"
+  "type": "module",
+  "sideEffects": false,
+  "name": "@emilgramdk/web",
+  "version": "0.0.1",
+  "description": "Utilities for web development with TypeScript.",
+  "packageManager": "bun@1.2.19",
+  "keywords": [
+    "web",
+    "utilities",
+    "typescript",
+    "solid-js"
+  ],
+  "author": "EmilGramDK <hi@emilgram.dk>= (https://emilgram.dk)",
+  "license": "ISC",
+  "homepage": "https://github.com/EmilGramDK/web#readme",
+  "repository": "github:EmilGramDK/web",
+  "bugs": {
+    "url": "https://github.com/EmilGramDK/web/issues"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "bun ./scripts/generate-barrel.ts ./src/utils",
+    "lint": "eslint --fix 'src/**/*.{ts,mts,tsx}'",
+    "format": "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'"
+  },
+  "types": "src/index.d.ts",
+  "exports": {
+    "./auth": "./src/auth/index.ts",
+    "./config": "./src/config/index.ts",
+    "./core": "./src/core/index.ts",
+    "./data": "./src/data/index.ts",
+    "./date": "./src/date/index.ts",
+    "./dom": "./src/dom/index.ts",
+    "./hooks": "./src/hooks/index.ts",
+    "./network": "./src/network/index.ts",
+    "./solid": "./src/solid/index.ts",
+    "./store": "./src/store/index.ts"
+  },
   "files": [
-    "dist"
+    "src",
+    "scripts"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EmilGramDK/js-utilities.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/EmilGramDK/js-utilities/issues"
-  },
-  "homepage": "https://github.com/EmilGramDK/js-utilities#readme",
-  "description": "",
   "devDependencies": {
-    "eslint": "^9.21.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
-    "tsup": "^8.4.0",
-    "typescript": "^5.8.2"
+    "@typescript-eslint/eslint-plugin": ">=8.0.0",
+    "@typescript-eslint/parser": ">=8.0.0",
+    "eslint-plugin-perfectionist": ">=4.0.0",
+    "eslint-plugin-sonarjs": ">=3.0.0",
+    "eslint-plugin-unicorn": ">=60.0.0",
+    "@eslint/js": ">=9.32.0",
+    "eslint": ">=9.32.0",
+    "eslint-plugin-solid": ">=0.14.5",
+    "globals": ">=16.3.0",
+    "prettier": ">=3.6.0",
+    "typescript": ">=5.8.2",
+    "typescript-eslint": ">=8.38.0",
+    "vite": ">=7.0.6"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "typescript-cookie": ">=1.0.6",
+    "solid-element": ">=1.9.1",
+    "solid-js": ">=1.9.7"
   }
 }

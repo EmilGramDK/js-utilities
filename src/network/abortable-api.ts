@@ -81,19 +81,23 @@ export class AbortableAPIService {
     return this.handleResponse<T>(response);
   }
 
-  private async handleResponse<T>(res: Response): Promise<T> {
-    const contentType = res.headers.get("Content-Type") || "";
+  private async handleResponse<T>(response: Response): Promise<T> {
+    const contentType = response.headers.get("Content-Type") || "";
 
-    if (!res.ok) {
-      const errorBody = contentType.includes("application/json") ? await res.json() : await res.text();
-      throw new Error(typeof errorBody === "string" ? errorBody : errorBody.message || "Unknown error");
+    if (!response.ok) {
+      const errorBody = contentType.includes("application/json")
+        ? await response.json()
+        : await response.text();
+      throw new Error(
+        typeof errorBody === "string" ? errorBody : errorBody.message || "Unknown error",
+      );
     }
 
     if (contentType.includes("application/json")) {
-      return res.json() as Promise<T>;
+      return response.json() as Promise<T>;
     }
 
     // Handle other content types as needed
-    return res.text() as unknown as T;
+    return response.text() as unknown as T;
   }
 }

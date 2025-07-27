@@ -4,12 +4,10 @@
  * @param date - The date (as a `Date` object or ISO-like string) to convert.
  * @returns The date in ISO format: YYYY-MM-DDTHH:MM:SS
  */
-export const getLocalISODate = (date: Date | string): string | null => {
+export const convertToISO = (date: Date | string): string => {
   const parsedDate = typeof date === "string" ? new Date(date) : date;
 
-  if (isNaN(parsedDate.getTime())) return null;
-
-  const pad = (n: number) => n.toString().padStart(2, "0");
+  if (Number.isNaN(parsedDate.getTime())) return "Invalid Date";
 
   const year = parsedDate.getFullYear();
   const month = pad(parsedDate.getMonth() + 1);
@@ -20,3 +18,5 @@ export const getLocalISODate = (date: Date | string): string | null => {
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 };
+
+const pad = (n: number) => n.toString().padStart(2, "0");
