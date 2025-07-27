@@ -2,7 +2,7 @@
   "type": "module",
   "sideEffects": false,
   "name": "@emilgramdk/web",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utilities for web development with TypeScript.",
   "packageManager": "bun@1.2.19",
   "keywords": [
@@ -41,7 +41,10 @@
   },
   "files": [
     "src",
-    "scripts"
+    "scripts",
+    "package.json",
+    "eslint.config.ts",
+    ".prettierrc.json"
   ],
   "publishConfig": {
     "access": "public"

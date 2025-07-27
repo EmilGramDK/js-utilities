@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-import { writeFile, cp, access } from "fs/promises";
+import { writeFile, cp, access, readFile } from "fs/promises";
 import { constants } from "fs";
 import { execSync } from "child_process";
 import path from "path";
@@ -9,23 +9,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = process.cwd();
 
 const devDependencies = [
-  "@stylistic/eslint-plugin@>=5.2.2",
-  "eslint-plugin-import-x@>=4.16.1",
-  "eslint-plugin-perfectionist@>=4.0.0",
-  "eslint-plugin-solid@>=0.14.5",
-  "eslint-plugin-sonarjs@>=3.0.0",
-  "eslint-plugin-unicorn@>=60.0.0",
-  "eslint@>=9.32.0",
-  "globals@>=16.3.0",
-  "prettier@>=3.6.0",
-  "typescript@>=5.8.2",
-  "typescript-eslint@^8.38.0",
+  "@stylistic/eslint-plugin",
+  "eslint-plugin-import-x",
+  "eslint-plugin-perfectionist",
+  "eslint-plugin-solid",
+  "eslint-plugin-sonarjs",
+  "eslint-plugin-unicorn",
+  "eslint",
+  "globals",
+  "prettier",
+  "typescript",
+  "typescript-eslint",
 ];
 
 const configFiles = [
   { name: "eslint.config.ts", target: "eslint.config.ts" },
-  { name: ".prettierrc", target: ".prettierrc" },
+  { name: ".prettierrc.json", target: ".prettierrc.json" },
 ];
+
+const scripts = {
+  lint: "eslint 'src/**/*.{ts,mts,tsx}' --fix",
+  format: "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
+};
 
 async function fileExists(filePath: string) {
   try {
@@ -56,10 +61,35 @@ async function copyConfigs() {
   }
 }
 
+async function updatePackageJsonScripts() {
+  const packageJsonPath = path.join(root, "package.json");
+  const raw = await readFile(packageJsonPath, "utf8");
+  const json = JSON.parse(raw);
+
+  let modified = false;
+  if (!json.scripts) json.scripts = {};
+
+  for (const [key, command] of Object.entries(scripts)) {
+    if (!json.scripts[key]) {
+      json.scripts[key] = command;
+      console.log(`✅ Added "${key}" script to package.json`);
+      modified = true;
+    } else {
+      console.log(`ℹ️  "${key}" script already exists, skipped.`);
+    }
+  }
+
+  if (modified) {
+    await writeFile(packageJsonPath, JSON.stringify(json, null, 2) + "\n", "utf8");
+    console.log("📦 package.json updated.");
+  }
+}
+
 (async () => {
   try {
     await installDeps();
     await copyConfigs();
+    await updatePackageJsonScripts();
     console.log("🎉 ESLint and Prettier setup complete!");
   } catch (error) {
     console.error("❌ Setup failed:", error);
