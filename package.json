@@ -19,13 +19,12 @@
     "url": "https://github.com/EmilGramDK/web/issues"
   },
   "bin": {
-    "setup": "./scripts/setup.ts"
+    "setup-dev": "./scripts/setup.ts"
   },
   "scripts": {
     "lint": "eslint --fix 'src/**/*.{ts,mts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
-    "setup": "bun run ./scripts/setup.ts",
-    "postinstall": "bun run setup"
+    "setup-dev": "bun run ./scripts/setup.ts"
   },
   "types": "src/index.d.ts",
   "exports": {
