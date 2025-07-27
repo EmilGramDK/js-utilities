@@ -35,8 +35,8 @@ export const getGlobalStore = <T extends Record<string, unknown>>(): GlobalStore
   return globalStore as GlobalStore<T>;
 };
 
-export const getStoreValue = <K extends string>(key: K): unknown => {
-  return getGlobalStore<Record<string, unknown>>().getValue(key);
+export const getStoreValue = <V>(key: string): V => {
+  return getGlobalStore<Record<string, unknown>>().getValue(key) as V;
 };
 
 export const setStoreValue = <K extends string, V>(key: K, value: V): void => {

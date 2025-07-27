@@ -31,7 +31,7 @@ export const eslintConfig = {
     /* Complexity */
     "no-useless-catch": "error",
     "no-useless-constructor": "warn",
-    "no-continue": "warn",
+    "no-continue": "off",
     "no-useless-escape": "warn",
     "no-else-return": ["error", { allowElseIf: false }],
     "no-negated-condition": "error",
