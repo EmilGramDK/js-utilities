@@ -9,3 +9,5 @@ export {
   removeCachedRef,
   hasCachedRef,
 } from "./ref";
+
+export { onClick, removeOnClick } from "./events";
