@@ -1,7 +1,7 @@
 /**
  * Represents an input item for a bulk operation, which must include a unique identifier.
  */
-type BulkInput<T> = T & { id: string };
+type BulkInput = unknown & { id: string };
 
 /**
  * The result of an individual bulk operation.
@@ -24,8 +24,8 @@ type BulkResult<T> = {
  *          each with metadata and result or error.
  */
 export async function processBulk<T>(
-  items: Array<BulkInput<T>>,
-  operation: (item: BulkInput<T>) => Promise<T>,
+  items: Array<BulkInput>,
+  operation: (item: BulkInput) => Promise<T>,
 ): Promise<{
   successes: Array<BulkResult<T>>;
   failures: Array<BulkResult<T>>;
