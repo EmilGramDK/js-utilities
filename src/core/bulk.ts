@@ -6,11 +6,11 @@ type BulkInput = unknown & { id: string };
 /**
  * The result of an individual bulk operation.
  */
-type BulkResult<T> = {
+type BulkResult<T, E> = {
   id: string;
   success: boolean;
   data?: T;
-  error?: unknown;
+  error?: E;
 };
 
 /**
@@ -23,20 +23,20 @@ type BulkResult<T> = {
  * @returns An object containing `successes` and `failures` arrays,
  *          each with metadata and result or error.
  */
-export async function processBulk<T>(
+export async function processBulk<T, E = Error>(
   items: Array<BulkInput>,
   operation: (item: BulkInput) => Promise<T>,
 ): Promise<{
-  successes: Array<BulkResult<T>>;
-  failures: Array<BulkResult<T>>;
+  successes: Array<BulkResult<T, E>>;
+  failures: Array<BulkResult<T, E>>;
 }> {
   const results = await Promise.all(
-    items.map(async (item): Promise<BulkResult<T>> => {
+    items.map(async (item): Promise<BulkResult<T, E>> => {
       try {
         const data = await operation(item);
         return { id: item.id, success: true, data };
       } catch (error) {
-        return { id: item.id, success: false, error };
+        return { id: item.id, success: false, error: error as E };
       }
     }),
   );
