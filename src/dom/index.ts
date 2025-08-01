@@ -10,4 +10,4 @@ export {
   hasCachedRef,
 } from "./ref";
 
-export { onClick, removeOnClick } from "./events";
+export * from "./events";
