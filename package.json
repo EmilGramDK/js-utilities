@@ -2,7 +2,7 @@
   "type": "module",
   "sideEffects": false,
   "name": "@emilgramdk/web",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Utilities for web development with TypeScript.",
   "packageManager": "bun@1.2.19",
   "keywords": [
@@ -41,7 +41,7 @@
     "./network": "./src/network/index.ts",
     "./solid": "./src/solid/index.ts",
     "./store": "./src/store/index.ts",
-    "./vite-plugin": "./src/vite-plugin/index.ts"
+    "./vite-plugin": "./src/vite-plugin/index.js"
   },
   "files": [
     "src",
@@ -65,14 +65,14 @@
     "globals": ">=16.3.0",
     "prettier": ">=3.6.0",
     "typescript": ">=5.8.2",
-    "typescript-eslint": "^8.38.0"
+    "typescript-eslint": ">=8.38.0",
+    "vite": ">=6.3.5"
   },
   "dependencies": {},
   "peerDependencies": {
     "typescript-cookie": ">=1.0.6",
     "solid-element": ">=1.9.1",
     "solid-js": ">=1.9.7",
-    "vite": ">=6.3.5",
     "vite-tsconfig-paths": ">=5.1.4",
     "vite-plugin-mkcert": ">=1.17.8"
   }

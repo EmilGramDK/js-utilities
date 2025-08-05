@@ -1,6 +1,4 @@
-import type { Plugin } from "vite";
-
-export const WebPlugin = (): Plugin => ({
+export const WebPlugin = () => ({
   name: "vite-plugin-emilgramdk",
   config: (config, { command }) => {
     const isProd = command === "build";

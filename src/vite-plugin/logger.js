@@ -1,8 +1,4 @@
-import type { Connect } from "vite";
-import type { ServerResponse, IncomingMessage } from "node:http";
-import type { Plugin } from "vite";
-
-export const LoggerPlugin = (): Plugin => ({
+export const LoggerPlugin = () => ({
   name: "vite-plugin-emilgramdk-logger",
   configureServer(server) {
     server.middlewares.use("/__log", middleware);
@@ -13,18 +9,18 @@ export const LoggerPlugin = (): Plugin => ({
   },
 });
 
-const transformHTML = (html: string) => {
+const transformHTML = (html) => {
   return html.replace("</body>", `<script>${loggerStr}</script></body>`);
 };
 
-const middleware = async (req: Connect.IncomingMessage, res: ServerResponse<IncomingMessage>) => {
+const middleware = async (req, res) => {
   if (req.method !== "POST") return res.end();
 
   try {
     const { data, type } = await parseBody(req);
     const pre = type === "table" ? "\n" : "[LOG]  » ";
     process.stdout.write(`\u001B[35m ${pre}`);
-    console[type as "log"](...data);
+    console[type](...data);
     process.stdout.write("\u001B[39m");
   } catch (error) {
     console.error("[Terminal] Error logging message:", error);
@@ -32,9 +28,7 @@ const middleware = async (req: Connect.IncomingMessage, res: ServerResponse<Inco
   return res.end();
 };
 
-const parseBody = (
-  req: Connect.IncomingMessage,
-): Promise<{ data: Array<unknown>; type: string }> => {
+const parseBody = (req) => {
   return new Promise((resolve, reject) => {
     let body = "";
     req.on("data", (chunk) => {
