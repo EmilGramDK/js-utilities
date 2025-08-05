@@ -2,7 +2,7 @@
   "type": "module",
   "sideEffects": false,
   "name": "@emilgramdk/web",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Utilities for web development with TypeScript.",
   "packageManager": "bun@1.2.19",
   "keywords": [
@@ -41,7 +41,8 @@
     "./network": "./src/network/index.ts",
     "./solid": "./src/solid/index.ts",
     "./store": "./src/store/index.ts",
-    "./vite-plugin": "./src/vite-plugin/index.js"
+    "./vite-plugin": "./src/vite-plugin/index.js",
+    "./vite-plugin/*": "./src/vite-plugin/*"
   },
   "files": [
     "src",

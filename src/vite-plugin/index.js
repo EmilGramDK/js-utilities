@@ -8,11 +8,12 @@ import { WebPlugin } from "./plugin";
  * - `ssl`: Enables SSL support using MKCert.
  * - `tsPaths`: Enables TypeScript path aliasing.
  * - `logger`: Enables console logging will be transfered to the terminal.
+ * - `dropConsole`: removes console and debugger statements in production builds.
  */
 export default function VitePlugin(options) {
-  const { ssl = true, logger = true, tsPaths = true } = options || {};
+  const { ssl = true, logger = true, tsPaths = true, dropConsole = true } = options || {};
 
-  const plugins = [WebPlugin()];
+  const plugins = [WebPlugin({ dropConsole })];
 
   if (ssl) plugins.push(MKCert());
   if (logger) plugins.push(LoggerPlugin());
