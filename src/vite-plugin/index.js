@@ -1,15 +1,8 @@
 import MKCert from "vite-plugin-mkcert";
 import TSPaths from "vite-tsconfig-paths";
-import { LoggerPlugin } from "./logger";
-import { WebPlugin } from "./plugin";
+import { LoggerPlugin } from "./logger.js";
+import { WebPlugin } from "./plugin.js";
 
-/**
- * This Vite Plugin returns an array of plugins based on the provided options.
- * - `ssl`: Enables SSL support using MKCert.
- * - `tsPaths`: Enables TypeScript path aliasing.
- * - `logger`: Enables console logging will be transfered to the terminal.
- * - `dropConsole`: removes console and debugger statements in production builds.
- */
 export default function VitePlugin(options) {
   const { ssl = true, logger = true, tsPaths = true, dropConsole = true } = options || {};
 

@@ -5,6 +5,7 @@ export type PluginOptions = {
   ssl?: boolean;
   tsPaths?: boolean;
   logger?: boolean;
+  dropConsole?: boolean;
 };
 
 /**
@@ -12,5 +13,6 @@ export type PluginOptions = {
  * - `ssl`: Enables SSL support using MKCert.
  * - `tsPaths`: Enables TypeScript path aliasing.
  * - `logger`: Enables console logging will be transfered to the terminal.
+ * - `dropConsole`: removes console and debugger statements in production builds.
  */
 export default function VitePlugin(options?: PluginOptions): Array<Plugin | PluginOption>;
