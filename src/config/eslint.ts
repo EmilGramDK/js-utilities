@@ -52,7 +52,7 @@ export const eslintConfig = {
     "no-alert": "warn",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-inferrable-types": "off",
-    "no-console": ["warn", { allow: ["warn", "error"] }],
+    "no-console": ["off", { allow: ["warn", "error"] }],
 
     /* Style */
     "no-restricted-syntax": [
