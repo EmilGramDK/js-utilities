@@ -1,51 +1,57 @@
 import { ref } from ".";
 
-type Callback = () => void;
+type Callback = (event: Event | CustomEvent) => void;
 type CallbackMap = Map<HTMLElement, Callback>;
 type El = HTMLElement | string;
 
 const eventListeners = new Map<string, CallbackMap>();
 
 /**
- * ons to an event on the specified element or selector.
+ * Subscribes to an event on the specified element or selector.
  * @param type - The type of event to on to.
  * @param ref - The target element or a CSS selector string.
  * @param callback - The function to call when the event occurs.
  */
 export function on(type: string, ref: El, cb: Callback): void {
-  const element = getElement(ref);
+  const element = resolveElement(ref);
   const eventMap = getOrCreateEventMap(type);
   eventMap.set(element, cb);
 }
 
 /**
- * Unons from an event on the specified element or selector.
+ * Unsubscribes from an event on the specified element or selector.
  * @param type - The type of event to unon from.
  * @param ref - The target element or a CSS selector string.
  */
 export function off(type: string, ref: El): void {
-  const element = getElement(ref);
+  const element = resolveElement(ref);
   const eventMap = getOrCreateEventMap(type);
   if (eventMap.has(element)) eventMap.delete(element);
 }
 
 function getOrCreateEventMap(type: string): CallbackMap {
-  let elementMap = eventListeners.get(type);
-  if (elementMap) return elementMap;
+  let callbackMap = eventListeners.get(type);
+  if (callbackMap) return callbackMap;
 
-  elementMap = new Map();
-  eventListeners.set(type, elementMap);
+  callbackMap = new Map();
+  eventListeners.set(type, callbackMap);
 
   globalThis.addEventListener(type, (event) => {
     const target = event.target as HTMLElement;
-    const callback = elementMap?.get(target);
-    if (callback) callback();
+    if (!target) return;
+
+    for (const [element, callback] of callbackMap) {
+      if (element.contains(target)) {
+        callback(event);
+        break; // Stop after the first match
+      }
+    }
   });
 
-  return elementMap;
+  return callbackMap;
 }
 
-function getElement(el: El): HTMLElement {
+function resolveElement(el: El): HTMLElement {
   return el instanceof HTMLElement ? el : ref(el);
 }
 
