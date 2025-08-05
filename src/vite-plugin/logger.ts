@@ -22,7 +22,7 @@ const middleware = async (req: Connect.IncomingMessage, res: ServerResponse<Inco
 
   try {
     const { data, type } = await parseBody(req);
-    const pre = type === "table" ? "\n" : "[LOG]  » ";
+    const pre = type === "table" ? "\n" : "[LOG] » ";
     process.stdout.write(`\u001B[35m ${pre}`);
     console[type as "log"](...data);
     process.stdout.write("\u001B[39m");
