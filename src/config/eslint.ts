@@ -27,13 +27,17 @@ export const eslintConfig = {
     quotes: ["error", "double"],
     "@typescript-eslint/no-unused-vars": "warn",
     "max-len": "off",
+    "max-depth": ["error", 2],
 
     /* Complexity */
+    "complexity": ["error", 2],
     "no-useless-catch": "error",
     "no-useless-constructor": "warn",
     "no-continue": "off",
     "no-useless-escape": "warn",
     "no-else-return": ["error", { allowElseIf: false }],
+    "no-dupe-else-if": "error",
+    "no-lonely-if": "error",
     "no-negated-condition": "error",
     "no-useless-return": "warn",
     "no-useless-computed-key": "warn",
@@ -56,7 +60,7 @@ export const eslintConfig = {
 
     /* Style */
     "no-restricted-syntax": [
-      "error",
+      "warn",
       {
         selector: "ExportDefaultDeclaration",
         message: "Prefer named exports",
