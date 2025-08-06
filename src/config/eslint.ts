@@ -49,7 +49,8 @@ export const eslintConfig = {
     "prefer-exponentiation-operator": "warn",
     "unicorn/no-useless-fallback-in-spread": "warn",
     "unicorn/no-this-assignment": "warn",
-
+    "unicorn/prefer-global-this": "off",
+    
     /* Suspicious */
     eqeqeq: ["warn", "always"],
     "no-debugger": "warn",
