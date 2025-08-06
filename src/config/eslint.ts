@@ -30,7 +30,7 @@ export const eslintConfig = {
     "max-depth": ["error", 2],
 
     /* Complexity */
-    "complexity": ["error", 2],
+    "complexity": ["error", 10],
     "no-useless-catch": "error",
     "no-useless-constructor": "warn",
     "no-continue": "off",
