@@ -2,8 +2,8 @@
 import type { Plugin, PluginOption } from "vite";
 import MKCert from "vite-plugin-mkcert";
 import TSPaths from "vite-tsconfig-paths";
-import { LoggerPlugin } from "./logger";
-import { WebPlugin } from "./plugin";
+import { WebPlugin } from "./web-plugin";
+import { LoggerPlugin } from "./logger-plugin";
 
 export type WebPluginOptions = {
   ssl?: boolean;
@@ -19,7 +19,7 @@ export type WebPluginOptions = {
  * - `logger`: Enables console logging will be transfered to the terminal.
  * - `dropConsole`: removes console and debugger statements in production builds.
  */
-export default function VitePlugin(options: WebPluginOptions): Array<Plugin | PluginOption> {
+export default function VitePlugin(options?: WebPluginOptions): Plugin {
   const { ssl = true, logger = true, tsPaths = true, dropConsole = true } = options || {};
 
   const plugins: Array<Plugin | PluginOption> = [WebPlugin({ dropConsole })];
@@ -28,5 +28,5 @@ export default function VitePlugin(options: WebPluginOptions): Array<Plugin | Pl
   if (logger) plugins.push(LoggerPlugin());
   if (tsPaths) plugins.push(TSPaths());
 
-  return plugins;
+  return plugins as unknown as Plugin;
 }

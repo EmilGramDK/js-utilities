@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable max-depth */
+/* eslint-disable complexity */
 type ConsoleMethod = "log" | "info" | "warn" | "error" | "debug" | "table";
 
 interface BaseLogPayload {
@@ -32,17 +36,13 @@ interface TableLogPayload extends BaseLogPayload {
   summary: string; // short human-friendly preview
 }
 
-// Config
-const ENDPOINT = "/__log";
-const METHODS: Array<ConsoleMethod> = ["log", "info", "warn", "error", "debug", "table"];
-
 // ---- stringifyAny: robust, DOM-aware, circular-safe ---------------------------------
 
 export function stringifyAny(value: unknown): string {
   // Fast paths for primitives
   if (value === null) return "null";
   const t = typeof value;
-  if (t === "string") return value;
+  if (t === "string") return value as string;
   if (t === "number") {
     if (Number.isNaN(value as number)) return "NaN";
     if (!Number.isFinite(value as number)) return (value as number) > 0 ? "Infinity" : "-Infinity";
@@ -52,7 +52,7 @@ export function stringifyAny(value: unknown): string {
   if (t === "bigint") return `${value as bigint}n`;
   if (t === "undefined") return "undefined";
   if (t === "symbol") return String(value);
-  if (t === "function") return `[Function ${(value as Function).name || "anonymous"}]`;
+  if (t === "function") return `[Function ${(value as { name: string }).name || "anonymous"}]`;
 
   // DOM / XML nodes
   const hasDOM = typeof Node !== "undefined" && typeof XMLSerializer !== "undefined";
@@ -67,22 +67,15 @@ export function stringifyAny(value: unknown): string {
 
   // Errors
   if (value instanceof Error) {
-    const basic = {
-      name: value.name,
-      message: value.message,
-      stack: value.stack,
-    };
-    // Capture cause if present
-    // @ts-expect-error: cause is stage-4 but not always in lib.d.ts
-    const cause = value.cause;
     return safeJSON({
-      ...basic,
-      ...(cause ? { cause: toSerializable(cause) } : {}),
+      ...value,
+      ...(value.cause ? { cause: toSerializable(value.cause) } : {}),
     });
   }
 
   // Dates, RegExp, URL
-  if (value instanceof Date) return isNaN(value.getTime()) ? "Invalid Date" : value.toISOString();
+  if (value instanceof Date)
+    return Number.isNaN(value.getTime()) ? "Invalid Date" : value.toISOString();
   if (value instanceof RegExp) return value.toString();
   if (value instanceof URL) return value.toString();
 
@@ -101,7 +94,7 @@ export function stringifyAny(value: unknown): string {
   if (typeof Blob !== "undefined" && value instanceof Blob) {
     const maybeFile = value as unknown as File;
     const name = typeof maybeFile.name === "string" ? maybeFile.name : undefined;
-    return `[${name ? "File" : "Blob"} ${name ? `"${name}" ` : ""}${value.size} bytes ${value.type || "application/octet-stream"}]`;
+    return `[${name ? "File" : "Blob"} ${name || ""} ${value.size} bytes ${value.type || "application/octet-stream"}]`;
   }
 
   // FormData
@@ -129,7 +122,7 @@ export function stringifyAny(value: unknown): string {
     return safeJSON({
       type: "Set",
       size: value.size,
-      values: [...value.values()].slice(0, 100).map(toSerializable),
+      values: [...value.values()].slice(0, 100).map((v) => toSerializable(v)),
     });
   }
 
@@ -158,7 +151,7 @@ export function stringifyAny(value: unknown): string {
 
 // Convert unknown to JSON-serializable with circular handling.
 function toSerializable(input: unknown, seen = new WeakSet<object>()): unknown {
-  if (input === null) return null;
+  if (input === null) return "null";
   const t = typeof input;
   if (t === "object") {
     const obj = input as Record<string | symbol, unknown>;
@@ -182,7 +175,7 @@ function toSerializable(input: unknown, seen = new WeakSet<object>()): unknown {
       return `${input as bigint}n`;
     }
     case "function": {
-      return `[Function ${(input as Function).name || "anonymous"}]`;
+      return `[Function ${(input as { name: string }).name || "anonymous"}]`;
     }
     case "symbol": {
       return String(input as symbol);
@@ -195,7 +188,7 @@ function toSerializable(input: unknown, seen = new WeakSet<object>()): unknown {
 
 function safeJSON(value: unknown): string {
   try {
-    return JSON.stringify(toSerializable(value), null, 2);
+    return JSON.stringify(toSerializable(value), undefined, 2);
   } catch {
     return "[Unserializable]";
   }
@@ -207,7 +200,7 @@ function processForLog(args: Array<unknown>): CommonLogPayload {
   return {
     type: "log",
     level: "log",
-    ts: new Date().toISOString(),
+    ts: new Date().toLocaleTimeString(),
     ua: typeof navigator === "undefined" ? undefined : navigator.userAgent,
     url: typeof location === "undefined" ? undefined : location.href,
     args,
@@ -243,7 +236,6 @@ function processForError(args: Array<unknown>): ErrorLogPayload {
   const errors: ErrorLogPayload["errors"] = [];
   for (const a of args) {
     if (a instanceof Error) {
-      // @ts-expect-error: cause may not exist on built-in type defs
       const cause = a.cause;
       errors.push({
         name: a.name,
@@ -302,12 +294,13 @@ function toTable(value: unknown): { columns: Array<string>; rows: Array<Record<s
   } else {
     rows.push({ value });
   }
-  const columns = [
-    ...rows.reduce<Set<string>>((acc, r) => {
-      Object.keys(r).forEach((k) => acc.add(k));
-      return acc;
-    }, new Set<string>()),
-  ];
+  const columnSet = new Set<string>();
+  for (const r of rows) {
+    for (const k of Object.keys(r)) {
+      columnSet.add(k);
+    }
+  }
+  const columns = [...columnSet];
   return { columns, rows };
 }
 
@@ -318,7 +311,7 @@ async function send(
 ): Promise<void> {
   try {
     // keepalive helps during unload/navigation
-    await fetch(ENDPOINT, {
+    await fetch((window as any).REMOTE_LOG_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       keepalive: true,
@@ -337,12 +330,10 @@ type OriginalConsole = {
 
 const __alreadyPatched__ = Symbol.for("__remote_console_patched__");
 
-export function patchConsole(endpoint = ENDPOINT): void {
-  // idempotent
-  if ((globalThis as any)[__alreadyPatched__]) return;
-  (globalThis as any)[__alreadyPatched__] = true;
-
-  (globalThis as any).REMOTE_LOG_ENDPOINT = endpoint;
+export function patchConsole(endpoint = "/__log"): void {
+  if ((window as any)[__alreadyPatched__]) return;
+  (window as any)[__alreadyPatched__] = true;
+  (window as any).REMOTE_LOG_ENDPOINT = endpoint;
 
   const original: OriginalConsole = {
     log: console.log.bind(console),
@@ -355,9 +346,7 @@ export function patchConsole(endpoint = ENDPOINT): void {
 
   function wrap(method: ConsoleMethod, handler: (args: Array<unknown>) => Promise<void> | void) {
     (console as any)[method] = (...args: Array<unknown>) => {
-      // Always print locally first
       original[method](...args);
-      // Then ship a shaped payload
       void handler(args);
     };
   }
@@ -368,12 +357,4 @@ export function patchConsole(endpoint = ENDPOINT): void {
   wrap("warn", async (args) => send(processForWarn(args)));
   wrap("error", async (args) => send(processForError(args)));
   wrap("table", async (args) => send(processForTable(args)));
-}
-
-// Optional unpatch helper (for tests / cleanup)
-export function unpatchConsole(): void {
-  if (!(globalThis as any)[__alreadyPatched__]) return;
-  delete (globalThis as any)[__alreadyPatched__];
-  // Easiest: reload page state; or keep copies of originals externally if you want a true unpatch.
-  // Intentionally left as a no-op beyond flag removal to avoid surprising state in prod.
 }

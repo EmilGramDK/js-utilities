@@ -1,0 +1,15 @@
+{
+  // Code Snippets for VSCode
+  // Prefix is what used to trigger the snippet.
+  // Body is the code that will be inserted.
+  // Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  //
+  // Example:
+  //   "Print to console": {
+  //     "scope": "javascript,typescript",
+  //     "prefix": "log",
+  //     "body": ["console.log(\"$1\");", "$2"],
+  //     "description": "Log output to console",
+  //   },
+}

@@ -18,23 +18,23 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --no-save
 
-      #      - name: Bump version
-      #        run: bun pm version patch --message "Bump version to %s" --force
-      #        env:
-      #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure Git
+        run: |
+          git config --global user.email "hi@emilgram.dk"
+          git config --global user.name "EmilGramDK"
+
+      - name: Bump version
+        run: bun pm version patch --message "Bump version to %s" --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Format Code
         run: bun run format
 
       - name: Lint Code
         run: bun run lint
-
-      - name: Configure Git
-        run: |
-          git config --global user.email "hi@emilgram.dk"
-          git config --global user.name "EmilGramDK"
 
       - name: Publish to npm
         run: bun publish
