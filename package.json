@@ -25,6 +25,7 @@
     "setup-dev": "./scripts/setup.ts"
   },
   "scripts": {
+    "build": "tsup",
     "lint": "eslint --fix 'src/**/*.{ts,mts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
     "setup-dev": "bun run ./scripts/setup.ts"
@@ -64,6 +65,7 @@
     "eslint-plugin-unicorn": ">=60.0.0",
     "globals": ">=16.3.0",
     "prettier": ">=3.6.0",
+    "tsup": "^8.5.0",
     "typescript": ">=5.8.2",
     "typescript-eslint": "^8.38.0"
   },
