@@ -67,9 +67,31 @@ async function copyConfigs() {
 }
 
 async function updateTSConfig() {
-  const tsconfigPath = path.join(root, "tsconfig.json");
-  const raw = await readFile(tsconfigPath, "utf8");
-  const json = JSON.parse(raw);
+  let tsconfigPath: string = path.join(root, "tsconfig.json");
+  let json = {
+    extends: tsconfig,
+    include: ["src/**/*"],
+    exclude: ["node_modules", "dist"],
+  };
+
+  try {
+    tsconfigPath = path.join(root, "tsconfig.json");
+    const raw = await readFile(tsconfigPath, "utf8");
+    json = JSON.parse(raw);
+  } catch {}
+
+  try {
+    const apptsconfigPath = path.join(root, "tsconfig.app.json");
+    const appRaw = await readFile(apptsconfigPath, "utf8");
+    json = JSON.parse(appRaw);
+    if (json) {
+      tsconfigPath = apptsconfigPath;
+    }
+  } catch {}
+
+  if (!json) {
+    console.warn("⚠️  No tsconfig.json or tsconfig.app.json found. Creating a new one.");
+  }
 
   if (!json.extends) {
     json.extends = tsconfig;

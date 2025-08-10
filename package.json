@@ -10,7 +10,6 @@
     "url": "https://github.com/EmilGramDK/web/issues"
   },
   "type": "module",
-  "prettier": "./src/config/prettier.json",
   "exports": {
     "./auth": "./src/auth/index.ts",
     "./eslint": "./src/config/eslint.ts",
@@ -31,10 +30,8 @@
     "setup-dev": "./scripts/setup.ts"
   },
   "files": [
-    ".prettierrc.json",
     ".vscode",
     "dist",
-    "eslint.config.ts",
     "scripts",
     "src"
   ],
@@ -83,5 +80,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "packageManager": "bun@1.2.20"
+  "packageManager": "bun@1.2.20",
+  "prettier": "./src/config/prettier.json"
 }
