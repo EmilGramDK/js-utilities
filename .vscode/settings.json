@@ -6,6 +6,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "always"
   },
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.scss": "tailwindcss"
+  },
   "search.exclude": {
     "**/node_modules/**": true,
     "**/.git": true,

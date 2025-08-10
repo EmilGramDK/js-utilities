@@ -4,7 +4,7 @@
   "name": "@emilgramdk/web",
   "version": "0.0.13",
   "description": "Utilities for web development with TypeScript.",
-  "packageManager": "bun@1.2.19",
+  "packageManager": "bun@1.2.20",
   "keywords": [
     "web",
     "utilities",
@@ -14,7 +14,7 @@
     "solid-js",
     "vite-plugin"
   ],
-  "author": "EmilGramDK <hi@emilgram.dk>= (https://emilgram.dk)",
+  "author": "EmilGramDK <hi@emilgram.dk>=(https://emilgram.dk)",
   "license": "ISC",
   "homepage": "https://github.com/EmilGramDK/web#readme",
   "repository": "github:EmilGramDK/web",
