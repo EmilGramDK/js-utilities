@@ -24,7 +24,7 @@ const devDependencies = [
 
 const configFiles = [
   { name: "eslint.config.ts", target: "eslint.config.ts" },
-  { name: ".prettierrc.json", target: ".prettierrc.json" },
+  // { name: ".prettierrc.json", target: ".prettierrc.json" },
 ];
 
 const scripts = {
@@ -32,6 +32,9 @@ const scripts = {
   format: "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
   check: "bun run format && bun run lint",
 };
+
+const prettier = "@emilgramdk/web/prettier";
+const tsconfig = "@emilgramdk/web/tsconfig";
 
 async function fileExists(filePath: string) {
   try {
@@ -62,6 +65,19 @@ async function copyConfigs() {
   }
 }
 
+async function updateTSConfig() {
+  const tsconfigPath = path.join(root, "tsconfig.json");
+  const raw = await readFile(tsconfigPath, "utf8");
+  const json = JSON.parse(raw);
+
+  if (!json.extends) {
+    json.extends = tsconfig;
+    console.log(`✅ Added "extends" field to tsconfig.json`);
+  }
+
+  await writeFile(tsconfigPath, JSON.stringify(json, null, 2) + "\n", "utf8");
+}
+
 async function updatePackageJsonScripts() {
   const packageJsonPath = path.join(root, "package.json");
   const raw = await readFile(packageJsonPath, "utf8");
@@ -78,6 +94,12 @@ async function updatePackageJsonScripts() {
     } else {
       console.log(`ℹ️  "${key}" script already exists, skipped.`);
     }
+  }
+
+  if (!json.prettier) {
+    json.prettier = prettier;
+    console.log(`✅ Added "prettier" config to package.json`);
+    modified = true;
   }
 
   if (modified) {
@@ -118,6 +140,7 @@ async function copyVSCodeFiles() {
     await copyConfigs();
     await updatePackageJsonScripts();
     await copyVSCodeFiles();
+    await updateTSConfig();
     console.log("🎉 ESLint and Prettier setup complete!");
   } catch (error) {
     console.error("❌ Setup failed:", error);
