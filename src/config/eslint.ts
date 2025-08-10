@@ -27,13 +27,17 @@ export const eslintConfig = {
     quotes: ["error", "double"],
     "@typescript-eslint/no-unused-vars": "warn",
     "max-len": "off",
+    "max-depth": ["error", 2],
 
     /* Complexity */
+    complexity: ["error", 10],
     "no-useless-catch": "error",
     "no-useless-constructor": "warn",
     "no-continue": "off",
     "no-useless-escape": "warn",
     "no-else-return": ["error", { allowElseIf: false }],
+    "no-dupe-else-if": "error",
+    "no-lonely-if": "error",
     "no-negated-condition": "error",
     "no-useless-return": "warn",
     "no-useless-computed-key": "warn",
@@ -45,6 +49,8 @@ export const eslintConfig = {
     "prefer-exponentiation-operator": "warn",
     "unicorn/no-useless-fallback-in-spread": "warn",
     "unicorn/no-this-assignment": "warn",
+    "unicorn/prefer-global-this": "off",
+    "unicorn/no-array-callback-reference": "off",
 
     /* Suspicious */
     eqeqeq: ["warn", "always"],
@@ -56,7 +62,7 @@ export const eslintConfig = {
 
     /* Style */
     "no-restricted-syntax": [
-      "error",
+      "warn",
       {
         selector: "ExportDefaultDeclaration",
         message: "Prefer named exports",
@@ -72,6 +78,7 @@ export const eslintConfig = {
     "unicorn/prevent-abbreviations": "off",
     "unicorn/no-array-for-each": "off",
     "no-unused-expressions": ["error", { allowTaggedTemplates: true }],
+    "sonarjs/no-commented-code": "warn",
 
     /* Correctness */
     "no-const-assign": "error",
@@ -79,7 +86,7 @@ export const eslintConfig = {
     /* Nursery */
     "no-await-in-loop": "error",
     "sonarjs/no-nested-template-literals": "warn",
-    "max-lines-per-function": ["error", { max: 50, skipBlankLines: true, skipComments: true }],
+    "max-lines-per-function": ["error", { max: 100, skipBlankLines: true, skipComments: true }],
 
     /* Performance */
     "unicorn/prefer-regexp-test": "error",
