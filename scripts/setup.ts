@@ -35,6 +35,7 @@ const scripts = {
 
 const prettier = "@emilgramdk/web/prettier";
 const tsconfig = "@emilgramdk/web/tsconfig";
+const eslint = { extends: "@emilgramdk/web/eslint" };
 
 async function fileExists(filePath: string) {
   try {
@@ -101,6 +102,12 @@ async function updatePackageJsonScripts() {
     console.log(`✅ Added "prettier" config to package.json`);
     modified = true;
   }
+
+  // if (!json.eslint) {
+  //   json.eslint = eslint;
+  //   console.log(`✅ Added "eslint" config to package.json`);
+  //   modified = true;
+  // }
 
   if (modified) {
     await writeFile(packageJsonPath, JSON.stringify(json, null, 2) + "\n", "utf8");
