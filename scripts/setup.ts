@@ -70,6 +70,13 @@ async function updateTSConfig() {
   let tsconfigPath: string = path.join(root, "tsconfig.json");
   let json = {
     extends: tsconfig,
+    compilerOptions: {
+      baseUrl: "./",
+      paths: {
+        "@*": ["./src/*"],
+      },
+      types: ["vite/client"],
+    },
     include: ["src/**/*"],
     exclude: ["node_modules", "dist"],
   };
