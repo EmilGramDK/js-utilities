@@ -11,3 +11,4 @@ export {
 } from "./ref";
 
 export * from "./events";
+export * from "./dom";

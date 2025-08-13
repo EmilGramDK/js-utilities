@@ -1,8 +1,7 @@
-import { ref } from ".";
+import { resolveElem, type El } from "./dom";
 
 type Callback = (event: Event | CustomEvent) => void;
 type CallbackMap = Map<HTMLElement, Callback>;
-type El = HTMLElement | string;
 
 const eventListeners = new Map<string, CallbackMap>();
 
@@ -13,7 +12,7 @@ const eventListeners = new Map<string, CallbackMap>();
  * @param callback - The function to call when the event occurs.
  */
 export function on(type: string, ref: El, cb: Callback): void {
-  const element = resolveElement(ref);
+  const element = resolveElem(ref);
   const eventMap = getOrCreateEventMap(type);
   eventMap.set(element, cb);
 }
@@ -24,7 +23,7 @@ export function on(type: string, ref: El, cb: Callback): void {
  * @param ref - The target element or a CSS selector string.
  */
 export function off(type: string, ref: El): void {
-  const element = resolveElement(ref);
+  const element = resolveElem(ref);
   const eventMap = getOrCreateEventMap(type);
   if (eventMap.has(element)) eventMap.delete(element);
 }
@@ -49,10 +48,6 @@ function getOrCreateEventMap(type: string): CallbackMap {
   });
 
   return callbackMap;
-}
-
-function resolveElement(el: El): HTMLElement {
-  return el instanceof HTMLElement ? el : ref(el);
 }
 
 export const onClick = (ref: El, cb: Callback) => on("click", ref, cb);
