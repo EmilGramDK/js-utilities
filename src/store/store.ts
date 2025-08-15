@@ -71,3 +71,14 @@ export const setStoreValue = <K extends string, V>(key: K, value: V): void => {
 export const hasStoreValue = <K extends string>(key: K): boolean => {
   return getGlobalStore<Record<string, unknown>>().hasValue(key);
 };
+
+export const subscribeToStore = <V>(key: string, callback: (value: V) => void): (() => void) => {
+  return getGlobalStore<Record<string, unknown>>().subscribe(
+    key,
+    callback as (value: unknown) => void,
+  );
+};
+
+export const unsubscribeFromStore = <V>(key: string, callback: (value: V) => void): void => {
+  getGlobalStore<Record<string, unknown>>().unsubscribe(key, callback as (value: unknown) => void);
+};
