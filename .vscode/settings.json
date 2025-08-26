@@ -16,6 +16,7 @@
     "**/.DS_Store": true,
     "**/.turbo": true,
     "**/.next": true,
-    "**/.angular": true
+    "**/.angular": true,
+    "**/*.lock": true
   }
 }
