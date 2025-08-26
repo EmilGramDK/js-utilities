@@ -115,9 +115,9 @@ function parseBody(req: Connect.IncomingMessage): Promise<AnyPayload> {
 
 /** Dispatch to per-type print functions */
 function printPayload(payload: AnyPayload): void {
-  const prefix = colorize(`[${payload.type.toUpperCase()}]`, colorForType(payload.type));
+  const prefix = colorize(formatType(payload.type), colorForType(payload.type));
   // include url: const meta = dim(` ${payload.ts} ${payload.url || ""}`);
-  const meta = dim(` ${payload.ts} `);
+  const meta = dim(` ${payload.ts}  `);
 
   switch (payload.type) {
     case "table": {
@@ -133,6 +133,11 @@ function printPayload(payload: AnyPayload): void {
       break;
     }
   }
+}
+
+function formatType(type: string) {
+  const spaces = " ".repeat(6 - type.length);
+  return `[${type.toUpperCase()}] ${spaces}`;
 }
 
 /** Common printer (log/info/debug/warn) uses argsSerialized for fidelity */

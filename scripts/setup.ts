@@ -24,7 +24,7 @@ const devDependencies = [
 
 const configFiles = [
   { name: "eslint.config.ts", target: "eslint.config.ts" },
-  { name: ".prettierrc.json", target: ".prettierrc.json" },
+  // { name: ".prettierrc.json", target: ".prettierrc.json" },
 ];
 
 const scripts = {
@@ -32,6 +32,10 @@ const scripts = {
   format: "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
   check: "bun run format && bun run lint",
 };
+
+const prettier = "@emilgramdk/web/prettier";
+const tsconfig = "@emilgramdk/web/tsconfig";
+const eslint = { extends: "@emilgramdk/web/eslint" };
 
 async function fileExists(filePath: string) {
   try {
@@ -62,6 +66,48 @@ async function copyConfigs() {
   }
 }
 
+async function updateTSConfig() {
+  let tsconfigPath: string = path.join(root, "tsconfig.json");
+  let json = {
+    extends: tsconfig,
+    compilerOptions: {
+      baseUrl: "./",
+      paths: {
+        "@*": ["./src/*"],
+      },
+      types: ["vite/client"],
+    },
+    include: ["src/**/*"],
+    exclude: ["node_modules", "dist"],
+  };
+
+  try {
+    tsconfigPath = path.join(root, "tsconfig.json");
+    const raw = await readFile(tsconfigPath, "utf8");
+    json = JSON.parse(raw);
+  } catch {}
+
+  try {
+    const apptsconfigPath = path.join(root, "tsconfig.app.json");
+    const appRaw = await readFile(apptsconfigPath, "utf8");
+    json = JSON.parse(appRaw);
+    if (json) {
+      tsconfigPath = apptsconfigPath;
+    }
+  } catch {}
+
+  if (!json) {
+    console.warn("⚠️  No tsconfig.json or tsconfig.app.json found. Creating a new one.");
+  }
+
+  if (!json.extends) {
+    json.extends = tsconfig;
+    console.log(`✅ Added "extends" field to tsconfig.json`);
+  }
+
+  await writeFile(tsconfigPath, JSON.stringify(json, null, 2) + "\n", "utf8");
+}
+
 async function updatePackageJsonScripts() {
   const packageJsonPath = path.join(root, "package.json");
   const raw = await readFile(packageJsonPath, "utf8");
@@ -79,6 +125,18 @@ async function updatePackageJsonScripts() {
       console.log(`ℹ️  "${key}" script already exists, skipped.`);
     }
   }
+
+  if (!json.prettier) {
+    json.prettier = prettier;
+    console.log(`✅ Added "prettier" config to package.json`);
+    modified = true;
+  }
+
+  // if (!json.eslint) {
+  //   json.eslint = eslint;
+  //   console.log(`✅ Added "eslint" config to package.json`);
+  //   modified = true;
+  // }
 
   if (modified) {
     await writeFile(packageJsonPath, JSON.stringify(json, null, 2) + "\n", "utf8");
@@ -118,6 +176,7 @@ async function copyVSCodeFiles() {
     await copyConfigs();
     await updatePackageJsonScripts();
     await copyVSCodeFiles();
+    await updateTSConfig();
     console.log("🎉 ESLint and Prettier setup complete!");
   } catch (error) {
     console.error("❌ Setup failed:", error);

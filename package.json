@@ -1,40 +1,20 @@
 {
-  "type": "module",
-  "sideEffects": false,
   "name": "@emilgramdk/web",
-  "version": "0.0.10",
+  "version": "0.0.24",
   "description": "Utilities for web development with TypeScript.",
-  "packageManager": "bun@1.2.19",
-  "keywords": [
-    "web",
-    "utilities",
-    "eslint",
-    "prettier",
-    "typescript",
-    "solid-js",
-    "vite-plugin"
-  ],
-  "author": "EmilGramDK <hi@emilgram.dk>= (https://emilgram.dk)",
   "license": "ISC",
+  "author": "EmilGramDK <hi@emilgram.dk> (https://emilgram.dk)",
   "homepage": "https://github.com/EmilGramDK/web#readme",
   "repository": "github:EmilGramDK/web",
   "bugs": {
     "url": "https://github.com/EmilGramDK/web/issues"
   },
-  "bin": {
-    "setup-dev": "./scripts/setup.ts"
-  },
-  "scripts": {
-    "build": "tsup",
-    "lint": "eslint --fix 'src/**/*.{ts,mts,tsx}'",
-    "format": "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
-    "setup-dev": "bun run ./scripts/setup.ts"
-  },
-  "types": "src/index.d.ts",
+  "type": "module",
   "exports": {
     "./auth": "./src/auth/index.ts",
-    "./config": "./src/config/index.ts",
-    "./ts-config.json": "./src/config/tsconfig.json",
+    "./eslint": "./src/config/eslint.ts",
+    "./prettier": "./src/config/prettier.json",
+    "./tsconfig": "./src/config/tsconfig.json",
     "./core": "./src/core/index.ts",
     "./data": "./src/data/index.ts",
     "./date": "./src/date/index.ts",
@@ -46,20 +26,36 @@
     "./vite-plugin": "./dist/vite-plugin/index.js",
     "./vite-plugin-browser": "./dist/vite-plugin/browser.js"
   },
+  "bin": {
+    "setup-dev": "./scripts/setup.ts"
+  },
   "files": [
-    "src",
+    "eslint.config.ts",
+    ".vscode",
     "dist",
     "scripts",
-    ".vscode",
-    "package.json",
-    "eslint.config.ts",
-    ".prettierrc.json"
+    "src"
   ],
-  "publishConfig": {
-    "access": "public"
+  "scripts": {
+    "build": "tsup",
+    "format": "prettier --write 'src/**/*.{ts,mts,tsx,js,json,md}'",
+    "lint": "eslint --fix 'src/**/*.{ts,mts,tsx}'",
+    "setup-dev": "bun run ./scripts/setup.ts"
+  },
+  "sideEffects": false,
+  "types": "src/index.d.ts",
+  "dependencies": {},
+  "peerDependencies": {
+    "solid-element": ">=1.9.1",
+    "solid-js": ">=1.9.7",
+    "typescript-cookie": ">=1.0.6",
+    "vite": ">=7.0.0",
+    "vite-plugin-mkcert": ">=1.17.8",
+    "vite-tsconfig-paths": ">=5.1.4"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": ">=5.2.2",
+    "@types/node": "^24.2.1",
     "esbuild-raw-plugin": "^0.3.1",
     "eslint": ">=9.32.0",
     "eslint-plugin-import-x": ">=4.16.1",
@@ -74,13 +70,18 @@
     "typescript-eslint": "^8.38.0",
     "vite": "7.1.1"
   },
-  "dependencies": {},
-  "peerDependencies": {
-    "typescript-cookie": ">=1.0.6",
-    "solid-element": ">=1.9.1",
-    "solid-js": ">=1.9.7",
-    "vite": ">=7.0.0",
-    "vite-tsconfig-paths": ">=5.1.4",
-    "vite-plugin-mkcert": ">=1.17.8"
-  }
+  "keywords": [
+    "eslint",
+    "prettier",
+    "solid-js",
+    "typescript",
+    "utilities",
+    "vite-plugin",
+    "web"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "bun@1.2.20",
+  "prettier": "./src/config/prettier.json"
 }
