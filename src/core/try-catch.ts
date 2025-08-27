@@ -46,10 +46,14 @@ export async function tryCatch<T, E = Error>(promise: Promise<T>): Promise<Resul
  *   }
  * });
  */
-export async function tryCatchAll<T, E = Error>(promises: Array<Promise<T>>): Promise<Array<Result<T, E>>> {
+export async function tryCatchAll<T, E = Error>(
+  promises: Array<Promise<T>>,
+): Promise<Array<Result<T, E>>> {
   return Promise.all(
     promises.map((promise) =>
-      promise.then((data) => ({ data, error: undefined })).catch((error) => ({ data: undefined, error: error as E })),
+      promise
+        .then((data) => ({ data, error: undefined }))
+        .catch((error) => ({ data: undefined, error: error as E })),
     ),
   );
 }
