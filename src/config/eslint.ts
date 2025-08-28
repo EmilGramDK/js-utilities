@@ -9,11 +9,17 @@ import solid from "eslint-plugin-solid";
 
 export const eslintConfig = {
   files: ["src/**/*.{ts,tsx,mts}"],
+  ignores: ["dist", "build", "coverage", "node_modules"],
 
   languageOptions: {
     globals: globals.browser,
     parser: tsparser,
     sourceType: "module",
+    parserOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      ecmaFeatures: { jsx: true },
+    }
   },
 
   plugins: { "@typescript-eslint": tseslint, unicorn, sonarjs, solid },
